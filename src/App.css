@@ -1,3 +1,13 @@
+@import '~antd/dist/antd.css';
+
+
+
+@font-face {
+  font-family: 'Evanter';
+  src: local('Evanter'), url(./pages/fonts/Evander-ExtraBold.ttf) format("truetype");
+}
+
+
 .App {
   text-align: center;
 }
