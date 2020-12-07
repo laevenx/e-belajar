@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Input, Button } from "antd";
 
 import { useHistory } from "react-router-dom";
+import { connect } from "react-redux";
 
 import { ToastContainer, toast } from "react-toastify";
 
@@ -18,18 +19,20 @@ import {
   tenth,
 } from "./questions";
 
-export default function Play() {
+function Play({ count, increment, reset, play }) {
   const [correct, setCorrect] = useState([]);
   const [page, setPage] = useState(third);
   const [select, setSelect] = useState(1);
   const [answer, setAnswer] = useState();
-
+  // console.log(props)
+  // const {addCorrect} = props
   const history = useHistory();
   // console.log(page);
   // console.log(page.image);
 
   useEffect(() => {
     nextQuestion();
+    play(1);
   }, []);
 
   async function nextQuestion() {
@@ -93,12 +96,12 @@ export default function Play() {
 
   function respond(index) {
     let array = [];
-    
-    if (index){
-      setAnswer(999)
+
+    if (index) {
+      setAnswer(999);
     }
 
-    console.log(answer,page.correct,index)
+    console.log(answer, page.correct, index);
     if (answer == page.correct || index == page.correct) {
       toast("Correct!!", {
         position: "top-right",
@@ -112,9 +115,11 @@ export default function Play() {
       array = correct;
       array.push(select);
       setCorrect(array);
+      increment();
       setAnswer("");
       // console.log("question answered:", correct.length);
       if (correct.length == 10) {
+        reset();
         history.push("/finish");
       } else {
         nextQuestion();
@@ -135,6 +140,16 @@ export default function Play() {
   }
   return (
     <div style={{ paddingTop: 150 }}>
+      <p
+        style={{
+          fontFamily: "Evanter",
+          fontSize: 48,
+          marginBottom: 0,
+          textAlign: "center" 
+        }}
+      >
+        Correct : {count.correct}
+      </p>
       {page.image ? <img style={page.styles.image} src={page.image} /> : ""}
       <br />
       {page.question ? <p style={page.styles.question}>{page.question}</p> : ""}
@@ -168,7 +183,7 @@ export default function Play() {
             return (
               <Button
                 type="primary"
-                onClick={() => respond(index+1)}
+                onClick={() => respond(index + 1)}
                 block
                 style={page.styles.answer}
               >
@@ -184,13 +199,14 @@ export default function Play() {
   );
 }
 
-// const mapState = (state) => ({
-//   count: state.count,
-// });
+const mapState = (state) => ({
+  count: state.count,
+});
 
-// const mapDispatch = (dispatch) => ({
-//   nextQuestion: dispatch.count.nextQuestion,
-//   Correct: dispatch.count.Correct,
-// });
+const mapDispatch = (dispatch) => ({
+  increment: dispatch.count.increment,
+  reset: dispatch.count.reset,
+  play: dispatch.count.play,
+});
 
-// export default connect(mapState, mapDispatch)(Play);
+export default connect(mapState, mapDispatch)(Play);
