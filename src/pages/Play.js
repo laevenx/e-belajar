@@ -148,7 +148,7 @@ function Play({ count, increment, reset, play }) {
           textAlign: "center" 
         }}
       >
-        Correct : {count.correct}
+        Score : {count.correct}
       </p>
       {page.image ? <img style={page.styles.image} src={page.image} /> : ""}
       <br />
